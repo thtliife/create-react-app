@@ -15,7 +15,19 @@ import NavigationBar from '../components/NavigationBar';
 import RuntimeError from './RuntimeError';
 import Footer from '../components/Footer';
 
-class RuntimeErrorContainer extends PureComponent {
+import type { ErrorRecord } from './RuntimeError';
+
+type Props = {|
+  errorRecords: ErrorRecord[],
+  close: () => void,
+  launchEditorEndpoint: ?string,
+|};
+
+type State = {|
+  currentIndex: number,
+|};
+
+class RuntimeErrorContainer extends PureComponent<Props, State> {
   state = {
     currentIndex: 0,
   };
@@ -54,13 +66,14 @@ class RuntimeErrorContainer extends PureComponent {
     return (
       <ErrorOverlay shortcutHandler={this.shortcutHandler}>
         <CloseButton close={close} />
-        {totalErrors > 1 &&
+        {totalErrors > 1 && (
           <NavigationBar
             currentError={this.state.currentIndex + 1}
             totalErrors={totalErrors}
             previous={this.previous}
             next={this.next}
-          />}
+          />
+        )}
         <RuntimeError
           errorRecord={errorRecords[this.state.currentIndex]}
           launchEditorEndpoint={this.props.launchEditorEndpoint}
